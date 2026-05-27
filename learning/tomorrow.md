@@ -1,46 +1,66 @@
-# 明日学习内容
-
-## Day 1：跑通项目并理解 OpenCV 入门流程
+# Day 1：搭建环境，运行现有脚本，理解项目目录、`assets/sample.jpg`、`output/` 和 `src/common.py`
 
 ### 学习目标
 
-用 1 小时确认环境可运行，理解当前项目如何读取图片、生成示例图、保存输出，并建立后续每天记录学习结果的习惯。
+用 1 小时跑通当前 OpenCV 项目，知道代码从哪里读取图片、在没有示例图片时如何生成练习图、结果保存到哪里，并能说清楚 `src/01_read_show_save.py` 中“读取图片 -> 查看尺寸 -> 转灰度 -> 保存输出”的基本流程。
 
-### 时间安排
+### 10/20/20/10 分钟时间安排
 
-- 10 分钟：阅读 `README.md` 的环境准备、运行方式和学习顺序。
-- 20 分钟：阅读 `src/common.py` 和 `src/01_read_show_save.py`，理解图片路径、示例图生成、灰度转换和保存输出。
-- 20 分钟：运行第 1 个脚本，观察 `output/` 目录生成的图片。
-- 10 分钟：记录运行结果、遇到的问题和明天想重点理解的概念。
+- 10 分钟：阅读 `README.md`，重点看“环境准备”“运行方式”和“学习顺序”，确认这个仓库的脚本入口和输出目录。
+- 20 分钟：阅读 `src/common.py` 和 `src/01_read_show_save.py`，先理解函数职责，再把主流程按顺序写成 4 个短句。
+- 20 分钟：在 PowerShell 中创建或激活虚拟环境，运行 Day 1 脚本，观察终端输出和 `output/` 中生成的图片。
+- 10 分钟：在 `learning/progress.md` 的 Day 1 记录中补充运行命令、输出文件、最重要概念和遇到的问题。
 
-### 运行命令
+### 需要阅读的项目文件
+
+- `README.md`：了解如何安装依赖、运行脚本，以及本仓库建议的学习顺序。
+- `src/common.py`：关注 `DEFAULT_IMAGE_PATH`、`load_image_or_demo()`、`create_demo_image()` 和 `save_image()`。
+- `src/01_read_show_save.py`：关注 `image.shape`、`cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)`、`save_image()`、`cv2.imshow()` 和 `cv2.waitKey(0)`。
+- `learning/progress.md`：学习结束后用它记录今天是否完成、跑过哪些命令、生成了哪些文件。
+
+### 要运行的 PowerShell 命令
+
+如果还没有虚拟环境，先执行：
 
 ```powershell
+python -m venv .venv
 .\.venv\Scripts\Activate.ps1
-python src/01_read_show_save.py
+python -m pip install --upgrade pip
+pip install -r requirements.txt
 ```
 
-如果 PowerShell 阻止激活虚拟环境，先运行：
+如果 PowerShell 阻止激活虚拟环境，先临时放开当前窗口的执行策略：
 
 ```powershell
 Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 .\.venv\Scripts\Activate.ps1
 ```
 
-### 重点阅读
+运行 Day 1 脚本：
 
-- `src/common.py`：`load_image_or_demo()` 如何在没有 `assets/sample.jpg` 时生成练习图。
-- `src/common.py`：`save_image()` 如何把结果写入 `output/`。
-- `src/01_read_show_save.py`：`image.shape`、`cv2.cvtColor()`、`cv2.imshow()`、`cv2.waitKey()` 的作用。
+```powershell
+python src/01_read_show_save.py
+```
+
+如果弹出的图片窗口挡住流程，在窗口中按任意键关闭；如果当前环境不能打开 GUI 窗口，先记录报错，重点确认终端是否已经打印图片尺寸和保存路径。
 
 ### 动手练习
 
-1. 运行脚本并确认生成 `output/01_original.jpg` 和 `output/01_gray.jpg`。
-2. 把自己的图片放到 `assets/sample.jpg` 后再次运行，比较输出差异。
-3. 暂时注释掉 `cv2.imshow()` 相关代码，只保留保存文件，观察脚本是否仍能完成输出。
+1. 先不放自己的图片，直接运行 `python src/01_read_show_save.py`，观察 `src/common.py` 是否提示使用自动生成的 demo image。
+2. 打开 `output/01_original.jpg` 和 `output/01_gray.jpg`，比较彩色图和灰度图的区别。
+3. 把一张自己的 JPG 图片放到 `assets/sample.jpg`，再次运行同一个脚本，确认终端从 `Loaded image:` 开始提示，并比较新的输出图片。
+4. 用自己的话写下主流程：`load_image_or_demo()` 得到图片，`image.shape` 读尺寸，`cv2.cvtColor()` 转灰度，`save_image()` 保存结果。
+
+### 输出文件或观察重点
+
+- `output/01_original.jpg`：原图或自动生成的彩色练习图。
+- `output/01_gray.jpg`：由 `cv2.COLOR_BGR2GRAY` 转换得到的灰度图。
+- 终端输出中的 `Image size: 宽x高` 和 `Channels: 3`。
+- 当 `assets/sample.jpg` 不存在时，代码会生成一张包含矩形、圆形、线条和文字的练习图；当它存在时，代码会优先读取这张图片。
 
 ### 复盘问题
 
-- OpenCV 读入的图片为什么是一个三维数组？
-- `width`、`height`、`channels` 分别来自 `image.shape` 的哪一部分？
-- 灰度图和原图相比，输出文件在视觉上有什么变化？
+- 今天你运行脚本时，读取的是自己的 `assets/sample.jpg`，还是自动生成的 demo image？你从哪一行终端输出判断出来的？
+- `image.shape` 返回的高度、宽度、通道数分别对应代码中的哪个变量？
+- 为什么 `output/01_gray.jpg` 看起来只有明暗变化，没有彩色信息？
+- `src/common.py` 把“读取图片”和“保存图片”封装成函数，对后面每天继续学习有什么好处？
